@@ -46,8 +46,6 @@ void snake(){
 }
 int main() {
     initialiation_allegro();
-    snake();
+    //snake();
     return (0);
 }END_OF_MAIN();
-
-
