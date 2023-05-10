@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <allegro.h>
+#include "Frogger.h"
 void initialiation_allegro(){
     allegro_init(); // appel obligatoire (var.globales, recup. infos syst�me ...)
     install_keyboard(); //pour utiliser le clavier
@@ -47,5 +48,6 @@ void snake(){
 int main() {
     initialiation_allegro();
     //snake();
+    frogger();
     return (0);
 }END_OF_MAIN();
