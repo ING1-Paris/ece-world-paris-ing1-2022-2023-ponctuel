@@ -7,4 +7,6 @@
 #include <stdio.h>
 #include <allegro.h>
 
+void frogger();
+
 #endif //PONCTUEL_FROGGER_H
