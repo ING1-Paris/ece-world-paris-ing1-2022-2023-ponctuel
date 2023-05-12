@@ -33,7 +33,7 @@ void frogger(){
         allegro_message("pas pu trouver/charger water.bmp");
         allegro_exit(); exit(EXIT_FAILURE);
     }
-    blit(background,screen,0,0,0,0,SCREEN_W,SCREEN_H);
+    blit(background,screen,0,0,1920,1200,SCREEN_W,SCREEN_H);
     while (!key[KEY_ESC]){
     }
     allegro_exit();
