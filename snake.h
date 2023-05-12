@@ -8,7 +8,7 @@
 #define VITSNAKE 5
 
 BITMAP *buffer;
-BITMAP *tete_s, *queue_s, *fond_s,*bout_s;
+BITMAP *tete_s, *queue_s, *fond_s,*bout_s,*pomme_s;
 typedef struct Queue {
     int posX, posY;//la position à laquelle il est affiché
     int cadX, cadY;//la position dans le cadrier
@@ -21,6 +21,14 @@ typedef struct {
     t_queue *suivant;
     int pomX,pomY;//la position de la pomme sur le cadrillage
 } t_tete;
+
+int mur(t_tete* tete){ return(!(tete->cadY>=0 && tete->cadY<=9 && tete->cadX>=0 && tete->cadX<=9 ));}
+int queueIci(t_queue* maillon,int cadX, int cadY){
+    if(!(maillon->suivant)) return(0);
+    else if(maillon->cadX==cadX && maillon->cadY==cadY) return(1);
+    return(queueIci(maillon->suivant,cadX,cadY));
+
+}
 void effacerQueue(t_queue *maillon) {
     blit(fond_s, buffer, maillon->posX, maillon->posY, maillon->posX, maillon->posY, 50, 50);
     if (maillon->suivant) {
@@ -151,6 +159,7 @@ void pasSerpent(t_tete *tete) {//déplacement d'un pixel
     if (tete->suivant) pasQueue(tete->suivant, tete->cadX , tete->cadY);
 }
 void caseSerpent(t_tete *tete) {
+    int precadX=tete->cadX,precadY=tete->cadY;
     for (int i = 0; i < 50; ++i) {
         effacerSerpent(tete);
         pasSerpent(tete);
@@ -169,11 +178,8 @@ void caseSerpent(t_tete *tete) {
         else if(key[KEY_DOWN] && (tete->direct!=3)){
             tete->futDirect=4;
         }
-    }
+    }//affichage, déplacement et captation des touches
     //printf("Le serpent est en %d %d, la queue est en %d %d\n",tete->cadX,tete->cadY,tete->suivant->cadX,tete->suivant->cadY);
-    if(tete->suivant){
-        actCaseQueue(tete->suivant,tete->cadX,tete->cadY);
-    }
     switch (tete->direct) {
         case (1): {
             tete->cadX--;
@@ -191,9 +197,44 @@ void caseSerpent(t_tete *tete) {
             tete->cadY++;
             break;
         }
-
+    }//déplacement de la case
+    if(mur(tete)) printf("attention:mur !! \n");
+    if(queueIci(tete->suivant,tete->cadX,tete->cadY)) printf("attention:queue !! \n");
+    if(tete->suivant){
+        actCaseQueue(tete->suivant,precadX,precadY);
     }
+
     tete->direct=tete->futDirect;
+}
+
+
+
+void ajouterQueueQ(t_queue* maillon){
+    //printf("ajouterQueueq\n");
+    if(maillon->suivant) ajouterQueueQ(maillon->suivant);
+    else{
+        //printf("pasQueueici\n");
+        maillon->suivant= malloc(sizeof(t_queue));
+        maillon->suivant->cadY=maillon->cadY;
+        maillon->suivant->cadX=maillon->cadX;
+        maillon->suivant->posX=maillon->posX;
+        maillon->suivant->posY=maillon->posY;
+        maillon->suivant->suivant=NULL;
+        //printf("creation de queue en %d %d (%d %d)\n",maillon->suivant->cadX,maillon->suivant->cadY,maillon->suivant->posX,maillon->suivant->posY);
+        //printf("source: %d %d (%d %d)",maillon->cadX,maillon->cadY)
+    }
+}
+void ajouterQueue(t_tete* serpent){
+    //printf("ajouterQueue\n");
+    if(serpent->suivant) ajouterQueueQ(serpent->suivant);
+    else{
+        serpent->suivant= malloc(sizeof(t_queue));
+        serpent->suivant->cadY=serpent->cadY;
+        serpent->suivant->cadX=serpent->cadX;
+        serpent->suivant->posX=serpent->posX;
+        serpent->suivant->posY=serpent->posY;
+        serpent->suivant->suivant=NULL;
+    }
 }
 
 void viderQueue(t_queue* maillon){
@@ -205,33 +246,6 @@ void viderSerpent(t_tete* tete){
     free(tete);
 }
 
-void ajouterQueueQ(t_queue* maillon){
-    printf("ajouterQueueq\n");
-    if(maillon->suivant) ajouterQueueQ(maillon->suivant);
-    else{
-        printf("pasQueueici\n");
-        maillon->suivant= malloc(sizeof(t_queue));
-        maillon->suivant->cadY=maillon->cadY;
-        maillon->suivant->cadX=maillon->cadX;
-        maillon->suivant->posX=maillon->posX;
-        maillon->suivant->posY=maillon->posY;
-        maillon->suivant->suivant=NULL;
-        printf("creation de queue en %d %d (%d %d)\n",maillon->suivant->cadX,maillon->suivant->cadY,maillon->suivant->posX,maillon->suivant->posY);
-        //printf("source: %d %d (%d %d)",maillon->cadX,maillon->cadY)
-    }
-}
-void ajouterQueue(t_tete* serpent){
-    printf("ajouterQueue\n");
-    if(serpent->suivant) ajouterQueueQ(serpent->suivant);
-    else{
-        serpent->suivant= malloc(sizeof(t_queue));
-        serpent->suivant->cadY=serpent->cadY;
-        serpent->suivant->cadX=serpent->cadX;
-        serpent->suivant->posX=serpent->posX;
-        serpent->suivant->posY=serpent->posY;
-        serpent->suivant->suivant=NULL;
-    }
-}
 
 void snake() {
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
@@ -262,6 +276,13 @@ void snake() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    pomme_s = load_bitmap("../images/pomme_s3.bmp", NULL);
+    if (!fond_s) {
+        allegro_message("n'a pas pu trouver/charger ../images/pomme_s3.bmp");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
 
 
     blit(fond_s, buffer, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
@@ -274,7 +295,7 @@ void snake() {
     serpent->direct = 2;
     serpent->futDirect=2;
     serpent->suivant=NULL;
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         ajouterQueue(serpent);
     }
 
