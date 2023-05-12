@@ -8,7 +8,7 @@
 #define VITSNAKE 5
 
 BITMAP *buffer;
-BITMAP *tete_s, *queue_s, *fond_s;
+BITMAP *tete_s, *queue_s, *fond_s,*bout_s;
 typedef struct Queue {
     int posX, posY;//la position à laquelle il est affiché
     int cadX, cadY;//la position dans le cadrier
@@ -19,8 +19,8 @@ typedef struct {
     int cadX, cadY;//la position dans le cadrier
     int direct, futDirect;//la direction actuelle et la prochaine
     t_queue *suivant;
+    int pomX,pomY;//la position de la pomme sur le cadrillage
 } t_tete;
-
 void effacerQueue(t_queue *maillon) {
     blit(fond_s, buffer, maillon->posX, maillon->posY, maillon->posX, maillon->posY, 50, 50);
     if (maillon->suivant) {
@@ -33,16 +33,70 @@ void effacerSerpent(t_tete *tete) {
         effacerQueue(tete->suivant);
     }
 }
-void afficherQueue(t_queue *maillon) {
-    masked_blit(queue_s, buffer, 0, 0, maillon->posX, maillon->posY, 50, 50);
+void afficherQueue(t_queue *maillon,int cadX,int cadY) {
+    if (maillon->cadX > cadX){
+        if(maillon->suivant){
+            masked_blit(queue_s, buffer, 0, 0, maillon->posX, maillon->posY, 50, 50);
+        }
+        else{
+            masked_blit(bout_s, buffer, 0, 0, maillon->posX, maillon->posY, 50, 50);
+        }
+        //printf("  gauche  ");
+    }
+    else if (maillon->cadX < cadX) {
+            if (maillon->suivant) {
+                masked_blit(queue_s, buffer, 0, 0, maillon->posX, maillon->posY, 50, 50);
+            }
+            else {
+                masked_blit(bout_s, buffer, 0, 50, maillon->posX, maillon->posY, 50, 50);
+            }
+            //printf(" droite ");
+
+    }
+    else if (maillon->cadY < cadY) {
+                if (maillon->suivant) {
+                    masked_blit(queue_s, buffer, 50, 0, maillon->posX, maillon->posY, 50, 50);}
+                else {
+        masked_blit(bout_s, buffer, 50, 50, maillon->posX, maillon->posY, 50, 50);
+        //printf(" bas ");
+    }
+
+    }
+    else  if(maillon->cadY > cadY){
+                    if (maillon->suivant) {
+                        masked_blit(queue_s, buffer, 50, 0, maillon->posX, maillon->posY, 50, 50);
+                    } else {
+                        masked_blit(bout_s, buffer, 50, 0, maillon->posX, maillon->posY, 50, 50);
+                    }
+                    //printf(" haut ");
+                }
+
     if (maillon->suivant) {
-        afficherQueue(maillon->suivant);
+        afficherQueue(maillon->suivant,maillon->cadX,maillon->cadY);
     }
 }
 void afficherSerpent(t_tete *tete) {
-    masked_blit(tete_s, buffer, 0, 0, tete->posX, tete->posY, 50, 50);
+    switch (tete->direct) {
+        case(1):{
+            masked_blit(tete_s, buffer, 50, 0, tete->posX, tete->posY, 50, 50);
+            break;
+        }
+        case(2):{
+            masked_blit(tete_s, buffer, 0, 0, tete->posX, tete->posY, 50, 50);
+            break;
+        }
+        case(3):{
+            masked_blit(tete_s, buffer, 50, 50, tete->posX, tete->posY, 50, 50);
+            break;
+        }
+        case(4):{
+            masked_blit(tete_s, buffer, 0, 50, tete->posX, tete->posY, 50, 50);
+            break;
+        }
+        
+    }
     if (tete->suivant) {
-        afficherQueue(tete->suivant);
+        afficherQueue(tete->suivant,tete->cadX,tete->cadY);
     }
 }
 void pasQueue(t_queue *maillon, int futCadx, int futCady) {
@@ -173,7 +227,7 @@ void ajouterQueue(t_tete* serpent){
         serpent->suivant= malloc(sizeof(t_queue));
         serpent->suivant->cadY=serpent->cadY;
         serpent->suivant->cadX=serpent->cadX;
-        serpent->suivant->posX=serpent->cadX;
+        serpent->suivant->posX=serpent->posX;
         serpent->suivant->posY=serpent->posY;
         serpent->suivant->suivant=NULL;
     }
@@ -183,42 +237,47 @@ void snake() {
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
 
     // Chargement de l'image
-    tete_s = load_bitmap("../images/tete_s.bmp", NULL);
-    if (!tete_s) {
-        allegro_message("n'a pas pu trouver/charger ../images/tete_s.bmp");
-        allegro_exit();
-        exit(EXIT_FAILURE);
-    }
-    queue_s = load_bitmap("../images/queue_s.bmp", NULL);
+    queue_s =load_bitmap("../images/queue_s3.bmp", NULL);
     if (!queue_s) {
-        allegro_message("n'a pas pu trouver/charger ../images/queue_s.bmp");
+        allegro_message("n'a pas pu trouver/charger ../images/queue_s3.bmp");
         allegro_exit();
         exit(EXIT_FAILURE);
 
     }
-    fond_s = load_bitmap("../images/fond_s.bmp", NULL);
-    if (!fond_s) {
-        allegro_message("n'a pas pu trouver/charger ../images/fond_s.bmp");
+    tete_s = load_bitmap("../images/tete_s3.bmp", NULL);
+    if (!tete_s) {
+        allegro_message("n'a pas pu trouver/charger ../images/tete_s3.bmp");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    fond_s = load_bitmap("../images/fond_s2.bmp", NULL);
+    if (!fond_s) {
+        allegro_message("n'a pas pu trouver/charger ../images/fond_s2.bmp");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    bout_s = load_bitmap("../images/queueB_s3.bmp", NULL);
+    if (!fond_s) {
+        allegro_message("n'a pas pu trouver/charger ../images/queueB_s3.bmp");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
 
     blit(fond_s, buffer, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
 
     t_tete *serpent = malloc(sizeof(t_tete));
-    serpent->posY = 50;
+    serpent->posY = 300;
     serpent->posX = 150;
-    serpent->cadY=0;
+    serpent->cadY=5;
     serpent->cadX=0;
     serpent->direct = 2;
     serpent->futDirect=2;
-    serpent->suivant=malloc(sizeof (t_queue));
-    serpent->suivant->posY=50;
-    serpent->suivant->posX=150;
-    serpent->suivant->cadX=0;
-    serpent->suivant->cadY=0;
-    serpent->suivant->suivant=NULL;
-    ajouterQueue(serpent);
+    serpent->suivant=NULL;
+    for (int i = 0; i < 4; ++i) {
+        ajouterQueue(serpent);
+    }
+
 
     while (!key[KEY_ESC]) {
         caseSerpent(serpent);
