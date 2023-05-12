@@ -6,3 +6,5 @@ set(CMAKE_C_STANDARD 99)
 add_executable(Ponctuel main.c Frogger.c Frogger.h)
 
 target_link_libraries(Ponctuel -lmingw32 -lalleg44)
+
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
