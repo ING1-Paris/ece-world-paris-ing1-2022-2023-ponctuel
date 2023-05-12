@@ -3,5 +3,5 @@ project(PROJET C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(PROJET main.c)
+add_executable(PROJET main.c snake.h)
 target_link_libraries(PROJET -lmingw32 -lalleg44)
