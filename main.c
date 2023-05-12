@@ -81,6 +81,8 @@ int main() {
             guitar_hero();
             break;
     }*/
+    snake();
+    frogger();
     guitar_hero();
     allegro_exit();
     return (0);
