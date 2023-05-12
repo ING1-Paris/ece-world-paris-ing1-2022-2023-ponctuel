@@ -1,14 +1,11 @@
-#include <allegro.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "guitar_hero.h"
 
 typedef struct {
     int posx;
     float posy;
 }t_touche;
-int menu(BITMAP *image){
+
+int choix_difficulte(BITMAP *image){
     clear_bitmap(image);
     int choix = 0;
     while(choix !=1) {
@@ -57,11 +54,11 @@ void Guitar_hero(BITMAP *image){
     int etat_perfect4 = 0;
     int etat_perfect5 = 0;
     float vitesse = 0;
-    if(menu(image) == 1){
+    if(choix_difficulte(image) == 1){
         vitesse = 0.00005;
-    } else if(menu(image) == 2){
+    } else if(choix_difficulte(image) == 2){
         vitesse = 0.0005;
-    } else if(menu(image) == 3){
+    } else if(choix_difficulte(image) == 3){
         vitesse = 0.005;
     }
     while(!key[KEY_TAB]) {
@@ -218,26 +215,22 @@ void Guitar_hero(BITMAP *image){
     free(touche5);
 }
 
-int main(){
+int guitar_hero() {
     srand(time(NULL));
     allegro_init();
-    BITMAP *image = create_bitmap(800,600);
+    BITMAP *image = create_bitmap(800, 600);
     install_keyboard();
     install_mouse();
     set_color_depth(8);
-    if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,800,600,0,0)!=0)
-    {
+    if (set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0) {
         allegro_message("probleme mode graphique");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
     show_mouse(screen);
-    while (!key[KEY_ESC]){
+    while (!key[KEY_ESC]) {
         Guitar_hero(image);
-        //menu(image);
     }
     allegro_exit();
     return 0;
 }
-
-END_OF_MAIN();

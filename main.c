@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <allegro.h>
 #include "Frogger.h"
+#include "guitar_hero.h"
+
 void initialiation_allegro(){
     allegro_init(); // appel obligatoire (var.globales, recup. infos syst�me ...)
     install_keyboard(); //pour utiliser le clavier
@@ -45,9 +47,43 @@ void snake(){
     while (!key[KEY_ESC]){
     }
 }
+
+int menu(){
+    clear_bitmap(buffer);
+    int choix = 0;
+    while(choix !=1) {
+        textprintf_centre_ex(buffer, font, 400, 100, makecol(255, 255, 255), -1, "MENU");
+        textprintf_centre_ex(buffer, font, 400, 200, makecol(255, 255, 255), -1, "A- SNAKE");
+        textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "B - FROGGER");
+        textprintf_centre_ex(buffer, font, 400, 400, makecol(255, 255, 255), -1, "C - GUITAR HERO");
+        blit(buffer,screen,0,0,0,0,SCREEN_W,SCREEN_H);
+        if(key[KEY_A]){
+            return 1;
+        } else if(key[KEY_B]){
+            return 2;
+        } else if(key[KEY_C]){
+            return 3;
+        }
+
+    }
+}
 int main() {
-    initialiation_allegro();
-    //snake();
+    //initialiation_allegro();
+    /*int choix = menu();
+    switch (choix) {
+        case 1:
+            snake();
+            break;
+        case 2:
+            frogger();
+            break;
+        case 3:
+            guitar_hero();
+            break;
+    }*/
+    snake();
     frogger();
+    guitar_hero();
+    allegro_exit();
     return (0);
 }END_OF_MAIN();
