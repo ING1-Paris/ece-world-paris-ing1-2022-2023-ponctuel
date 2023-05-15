@@ -54,11 +54,12 @@ void Guitar_hero(BITMAP *image){
     int etat_perfect4 = 0;
     int etat_perfect5 = 0;
     float vitesse = 0;
-    if(choix_difficulte(image) == 1){
+    int choix = choix_difficulte(image);
+    if(choix == 1){
         vitesse = 0.00005;
-    } else if(choix_difficulte(image) == 2){
+    } else if(choix == 2){
         vitesse = 0.0005;
-    } else if(choix_difficulte(image) == 3){
+    } else if(choix == 3){
         vitesse = 0.005;
     }
     while(!key[KEY_TAB]) {
@@ -213,7 +214,6 @@ void Guitar_hero(BITMAP *image){
     free(touche3);
     free(touche4);
     free(touche5);
-    allegro_exit();
 }
 
 int guitar_hero() {

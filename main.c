@@ -19,12 +19,12 @@ void initialiation_allegro(){
         exit(EXIT_FAILURE);
     }
 }
-BITMAP *buffer;
 
-int menu(){
-    clear_bitmap(buffer);
+int menu(BITMAP *buffer){
     int choix = 0;
     while(choix !=1) {
+        //clear_to_color(screen,makecol(255, 0, 255));
+        clear_to_color(buffer,makecol(0, 0, 0));
         textprintf_centre_ex(buffer, font, 400, 100, makecol(255, 255, 255), -1, "MENU");
         textprintf_centre_ex(buffer, font, 400, 200, makecol(255, 255, 255), -1, "A- SNAKE");
         textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "B - FROGGER");
@@ -37,15 +37,14 @@ int menu(){
         } else if(key[KEY_C]){
             return 3;
         }
-
     }
 }
 int main() {
     initialiation_allegro();
-    /*int choix = menu();
+    BITMAP *buffer = create_bitmap(800,600);
+    int choix = menu(buffer);
     switch (choix) {
         case 1:
-            snake();
             break;
         case 2:
             frogger();
@@ -53,10 +52,7 @@ int main() {
         case 3:
             guitar_hero();
             break;
-    }*/
-    //snake();
-    frogger();
-    //guitar_hero();
+    }
     allegro_exit();
     exit(EXIT_SUCCESS);
     return (0);
