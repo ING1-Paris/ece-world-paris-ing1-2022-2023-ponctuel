@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <allegro.h>
 
+void bitmapLoader();
+void freeBitmap();
 void frogger();
 
 #endif //PONCTUEL_FROGGER_H
