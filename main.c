@@ -19,34 +19,7 @@ void initialiation_allegro(){
         exit(EXIT_FAILURE);
     }
 }
-BITMAP* buffer;
-BITMAP* tete,*queue,*fond;
-void snake(){
-    buffer=create_bitmap(SCREEN_W,SCREEN_H);
-    clear_bitmap(buffer);
-
-    // Chargement de l'image
-    tete=load_bitmap("tete_s.bmp",NULL);
-    if (!tete)  {
-        allegro_message("pas pu trouver/charger tete_s.bmp");
-        allegro_exit(); exit(EXIT_FAILURE);
-    }
-    queue=load_bitmap("queue_s.bmp",NULL);
-    if (!queue)  {
-        allegro_message("pas pu trouver/charger queue_s.bmp");
-        allegro_exit(); exit(EXIT_FAILURE);
-
-    }fond=load_bitmap("fond_s.bmp",NULL);
-    if (!fond)  {
-        allegro_message("pas pu trouver/charger fond_s.bmp");
-        allegro_exit(); exit(EXIT_FAILURE);
-    }
-
-
-    blit(fond,screen,0,0,0,0,SCREEN_W,SCREEN_H);
-    while (!key[KEY_ESC]){
-    }
-}
+BITMAP *buffer;
 
 int menu(){
     clear_bitmap(buffer);
