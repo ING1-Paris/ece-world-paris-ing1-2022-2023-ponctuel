@@ -4,8 +4,12 @@
 
 #ifndef PROJET_SNAKE_H
 #define PROJET_SNAKE_H
+#include <stdio.h>
+#include <allegro.h>
+#include <stdlib.h>
+#include <time.h>
 
-#define VITSNAKE 5
+#define VITSNAKE 2
 
 BITMAP *buffer;
 BITMAP *tete_s, *queue_s, *fond_s,*bout_s,*pomme_s;
@@ -22,6 +26,15 @@ typedef struct {
     int pomX,pomY;//la position de la pomme sur le cadrillage
 } t_tete;
 
+void viderQueue(t_queue* maillon){
+    if(maillon->suivant){/*printf("liberation de %d\n",maillon->suivant); */viderQueue(maillon->suivant);}
+    free(maillon);
+}
+void viderSerpent(t_tete* tete){
+    if(tete->suivant) viderQueue(tete->suivant);
+    free(tete);
+}
+
 int mur(t_tete* tete){ return(!(tete->cadY>=0 && tete->cadY<=9 && tete->cadX>=0 && tete->cadX<=9 ));}
 int queueIci(t_queue* maillon,int cadX, int cadY){
     if(!(maillon->suivant)) return(0);
@@ -29,17 +42,60 @@ int queueIci(t_queue* maillon,int cadX, int cadY){
     return(queueIci(maillon->suivant,cadX,cadY));
 
 }
+void ajouterQueueQ(t_queue* maillon){
+    //printf("ajouterQueueq\n");
+    if(maillon->suivant) ajouterQueueQ(maillon->suivant);
+    else{
+        //printf("pasQueueici\n");
+        maillon->suivant= malloc(sizeof(t_queue));
+        maillon->suivant->cadY=maillon->cadY;
+        maillon->suivant->cadX=maillon->cadX;
+        maillon->suivant->posX=maillon->posX;
+        maillon->suivant->posY=maillon->posY;
+        maillon->suivant->suivant=NULL;
+        //printf("creation de queue en %d %d (%d %d)\n",maillon->suivant->cadX,maillon->suivant->cadY,maillon->suivant->posX,maillon->suivant->posY);
+        //printf("source: %d %d (%d %d)",maillon->cadX,maillon->cadY)
+    }
+}
+void ajouterQueue(t_tete* serpent){
+    //printf("ajouterQueue\n");
+    if(serpent->suivant) ajouterQueueQ(serpent->suivant);
+    else{
+        serpent->suivant= malloc(sizeof(t_queue));
+        serpent->suivant->cadY=serpent->cadY;
+        serpent->suivant->cadX=serpent->cadX;
+        serpent->suivant->posX=serpent->posX;
+        serpent->suivant->posY=serpent->posY;
+        serpent->suivant->suivant=NULL;
+    }
+}
+
 void effacerQueue(t_queue *maillon) {
     blit(fond_s, buffer, maillon->posX, maillon->posY, maillon->posX, maillon->posY, 50, 50);
     if (maillon->suivant) {
         effacerQueue(maillon->suivant);
     }
 }
+void supprimerQueue(t_queue * maillon){
+    if(maillon->suivant){
+        supprimerQueue(maillon->suivant);
+    }
+    blit(fond_s, buffer, maillon->posX, maillon->posY, maillon->posX, maillon->posY, 50, 50);
+    blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+    //printf("se passe\n");
+    rest(VITSNAKE*90);
+
+    free(maillon);
+
+}//efface et libère les queues en cas de défaite
+
 void effacerSerpent(t_tete *tete) {
     blit(fond_s, buffer, tete->posX, tete->posY, tete->posX, tete->posY, 50, 50);
+    blit(fond_s, buffer, 150+(tete->pomX)*50, 50+(tete->pomY)*5, 150+(tete->pomX)*50, 50+(tete->pomY)*5, 50, 50);
     if (tete->suivant) {
         effacerQueue(tete->suivant);
     }
+
 }
 void afficherQueue(t_queue *maillon,int cadX,int cadY) {
     if (maillon->cadX > cadX){
@@ -84,6 +140,7 @@ void afficherQueue(t_queue *maillon,int cadX,int cadY) {
     }
 }
 void afficherSerpent(t_tete *tete) {
+    masked_blit(pomme_s, buffer, 0, 0, 150+(tete->pomX)*50, 50+(tete->pomY)*50, 50, 50);
     switch (tete->direct) {
         case(1):{
             masked_blit(tete_s, buffer, 50, 0, tete->posX, tete->posY, 50, 50);
@@ -198,56 +255,24 @@ void caseSerpent(t_tete *tete) {
             break;
         }
     }//déplacement de la case
-    if(mur(tete)) printf("attention:mur !! \n");
-    if(queueIci(tete->suivant,tete->cadX,tete->cadY)) printf("attention:queue !! \n");
+    //if(mur(tete)) printf("attention:mur !! \n");
+    //if(queueIci(tete->suivant,tete->cadX,tete->cadY)) printf("attention:queue !! \n");
     if(tete->suivant){
         actCaseQueue(tete->suivant,precadX,precadY);
     }
-
+    if(tete->pomX==tete->cadX && tete->pomY==tete->cadY){
+        blit(fond_s, buffer, 100+(tete->pomX)*50, 50+(tete->pomY)*5, 100+(tete->pomX)*50, 50+(tete->pomY)*5, 50, 50);
+        tete->pomY=rand()%10;
+        tete->pomX=rand()%10;
+        ajouterQueue(tete);
+        //printf("actulisation de la pomme\n");
+    }
     tete->direct=tete->futDirect;
 }
 
 
-
-void ajouterQueueQ(t_queue* maillon){
-    //printf("ajouterQueueq\n");
-    if(maillon->suivant) ajouterQueueQ(maillon->suivant);
-    else{
-        //printf("pasQueueici\n");
-        maillon->suivant= malloc(sizeof(t_queue));
-        maillon->suivant->cadY=maillon->cadY;
-        maillon->suivant->cadX=maillon->cadX;
-        maillon->suivant->posX=maillon->posX;
-        maillon->suivant->posY=maillon->posY;
-        maillon->suivant->suivant=NULL;
-        //printf("creation de queue en %d %d (%d %d)\n",maillon->suivant->cadX,maillon->suivant->cadY,maillon->suivant->posX,maillon->suivant->posY);
-        //printf("source: %d %d (%d %d)",maillon->cadX,maillon->cadY)
-    }
-}
-void ajouterQueue(t_tete* serpent){
-    //printf("ajouterQueue\n");
-    if(serpent->suivant) ajouterQueueQ(serpent->suivant);
-    else{
-        serpent->suivant= malloc(sizeof(t_queue));
-        serpent->suivant->cadY=serpent->cadY;
-        serpent->suivant->cadX=serpent->cadX;
-        serpent->suivant->posX=serpent->posX;
-        serpent->suivant->posY=serpent->posY;
-        serpent->suivant->suivant=NULL;
-    }
-}
-
-void viderQueue(t_queue* maillon){
-    if(maillon->suivant){printf("liberation de %d\n",maillon->suivant); viderQueue(maillon->suivant);}
-    free(maillon);
-}
-void viderSerpent(t_tete* tete){
-    if(tete->suivant) viderQueue(tete->suivant);
-    free(tete);
-}
-
-
 void snake() {
+    int defaite=0;
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
 
     // Chargement de l'image
@@ -294,18 +319,27 @@ void snake() {
     serpent->cadX=0;
     serpent->direct = 2;
     serpent->futDirect=2;
+    serpent->pomY=rand()%10;
+    serpent->pomX=rand()%10;
+    //printf("%d %d",serpent->pomX,serpent->pomY);
     serpent->suivant=NULL;
     for (int i = 0; i < 5; ++i) {
         ajouterQueue(serpent);
     }
 
 
-    while (!key[KEY_ESC]) {
+    while (!key[KEY_ESC] && !(defaite)) {
         caseSerpent(serpent);
-        rest(VITSNAKE);
         if(key[KEY_R]){
             ajouterQueue(serpent);
         }
+        if(mur(serpent) || queueIci(serpent->suivant,serpent->cadX,serpent->cadY)){
+           //printf("t'as perdu\n");
+            supprimerQueue(serpent->suivant);
+            defaite=1;
+        }
+        rest(VITSNAKE);
+
     }
     viderSerpent(serpent);
 

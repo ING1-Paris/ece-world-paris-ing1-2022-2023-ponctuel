@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <allegro.h>
+
 #include "snake.h"
 
 void initialiation_allegro() {
@@ -25,6 +24,7 @@ void initialiation_allegro() {
 int main() {
 
     initialiation_allegro();
+    srand(time(NULL));
     snake();
     allegro_exit();
     return (0);
