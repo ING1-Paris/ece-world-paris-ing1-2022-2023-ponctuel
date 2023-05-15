@@ -41,9 +41,26 @@ int menu(BITMAP *buffer){
 }
 
 void afficher_tableau(BITMAP *buffer, int score1, int score2){
+    BITMAP * glitch1 = load_bitmap("../assets/menu/ImageGlitch1.bmp",NULL);
+    BITMAP * glitch2 = load_bitmap("../assets/menu/ImageGlitch2.bmp",NULL);
+    BITMAP * glitch3 = load_bitmap("../assets/menu/ImageGlitch3.bmp",NULL);
+    BITMAP * glitch4 = load_bitmap("../assets/menu/ImageGlitch4.bmp",NULL);
     while(!key[KEY_ESC]) {
+        clear_bitmap(buffer);
+        int alea = rand()%50;
+        int posx = rand()%800;
+        int posy = rand()%600;
         textprintf_centre_ex(buffer, font, 400, 100, makecol(255, 255, 255), -1, "Score du joueur 1 : %d", score1);
         textprintf_centre_ex(buffer, font, 400, 200, makecol(255, 255, 255), -1, "Score du joueur 2 : %d", score2);
+        if(alea == 0){
+            blit(glitch1,buffer,0,0,posx,posy,80,82);
+        } else if(alea == 1){
+            blit(glitch2,buffer,0,0,posx,posy,92,71);
+        } else if(alea == 2){
+            blit(glitch3,buffer,0,0,posx,posy,92,80);
+        } else if(alea == 3){
+            blit(glitch4,buffer,0,0,posx,posy,122,101);
+        }
         if(score1>score2) {
             textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "Joueur 1 est le vainqueur !");
         } else if(score1<score2) {
