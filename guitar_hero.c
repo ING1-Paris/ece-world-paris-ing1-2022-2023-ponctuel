@@ -213,24 +213,15 @@ void Guitar_hero(BITMAP *image){
     free(touche3);
     free(touche4);
     free(touche5);
+    allegro_exit();
 }
 
 int guitar_hero() {
     srand(time(NULL));
-    allegro_init();
     BITMAP *image = create_bitmap(800, 600);
-    install_keyboard();
-    install_mouse();
-    set_color_depth(8);
-    if (set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0) {
-        allegro_message("probleme mode graphique");
-        allegro_exit();
-        exit(EXIT_FAILURE);
-    }
     show_mouse(screen);
     while (!key[KEY_ESC]) {
         Guitar_hero(image);
     }
-    allegro_exit();
     return 0;
 }

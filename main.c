@@ -11,17 +11,13 @@ void initialiation_allegro(){
     set_color_depth(desktop_color_depth()); //ici�: identique � celle du bureau
     //s�lection du mode graphique
     // avec choix d'un driver+mode+r�solution de l'�cran
-    if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN,1920,1200,0,0)!=0)
+    if (set_gfx_mode(GFX_AUTODETECT_WINDOWED,800,600,0,0)!=0)
     {
         // message et sortie de prog. si �chec
         allegro_message("prb gfx mode");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
-    if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) != 0) {
-        printf("Impossible d'initialiser le module sonore\n");
-    }
-
 }
 BITMAP* buffer;
 BITMAP* tete,*queue,*fond;
