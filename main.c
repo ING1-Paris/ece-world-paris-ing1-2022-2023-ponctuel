@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <allegro.h>
 #include "Frogger.h"
 #include "guitar_hero.h"
+#include "snake.h"
 
 void initialiation_allegro(){
     allegro_init(); // appel obligatoire (var.globales, recup. infos syst�me ...)
@@ -54,7 +53,7 @@ int main() {
             guitar_hero();
             break;
     }*/
-    //snake();
+    snake();
     frogger();
     //guitar_hero();
     allegro_exit();
