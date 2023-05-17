@@ -75,19 +75,60 @@ int main() {
     initialiation_allegro();
     BITMAP *buffer = create_bitmap(800,600);
     int score1 = 50;
-    int score2 = 50;/*
+    int score2 = 50;
+    int nb_ticket1 = 0;
+    int nb_ticket2 = 0;
+    int egalite = 1;
+    int fin = 0;
     int choix = menu(buffer);
-    switch (choix) {
-        case 1:
-            break;
-        case 2:
-            frogger();
-            break;
-        case 3:
-            guitar_hero();
-            break;
-    }*/
-    afficher_tableau(buffer,score1,score2);
+    while (fin !=1) {
+        while (egalite == 1) {
+            switch (choix) {
+                case 1:
+                    break;
+                case 2:
+                    //score1 = frogger();
+                    if (score1 == 1) {
+                        nb_ticket1++;
+                        egalite = 0;
+                    } else if (score1 == 2) {
+                        nb_ticket2++;
+                        egalite = 0;
+                    }
+                case 3:
+                    score1 = guitar_hero();
+                    score2 = guitar_hero();
+                    if (score1 > score2) {
+                        nb_ticket1++;
+                        egalite = 0;
+                    } else if (score1 < score2) {
+                        nb_ticket2++;
+                        egalite = 0;
+                    } else if (score1 == score2) {
+                        egalite = 1;
+                        while (!key[KEY_R]) {
+                            clear_bitmap(buffer);
+                            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1,
+                                                 "Vous etes a egalite ! Appuyer sur r pour recommencer");
+                            blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+                        }
+                    }
+            }
+        }
+        while(1) {
+            clear(buffer);
+            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1,"Voulez-vous arretez ? Appuyer sur a pour non et b pour oui");
+            if(key[KEY_B]){
+                fin = 1;
+                break;
+            } else if(key[KEY_Q]) {
+                egalite = 1;
+                break;
+            }
+            blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+        }
+    }
+    afficher_tableau(buffer,nb_ticket1,nb_ticket2);
     allegro_exit();
     exit(EXIT_SUCCESS);
     return (0);

@@ -6,9 +6,8 @@ typedef struct {
 }t_touche;
 
 int choix_difficulte(BITMAP *image){
-    clear_bitmap(image);
-    int choix = 0;
-    while(choix !=1) {
+    while(1) {
+        clear_bitmap(image);
         textprintf_centre_ex(image, font, 400, 100, makecol(255, 255, 255), -1, "MENU");
         textprintf_centre_ex(image, font, 400, 200, makecol(255, 255, 255), -1, "1- MODE FACILE");
         textprintf_centre_ex(image, font, 400, 300, makecol(255, 255, 255), -1, "2- MODE MOYEN");
@@ -24,7 +23,8 @@ int choix_difficulte(BITMAP *image){
 
     }
 }
-void Guitar_hero(BITMAP *image){
+
+int Guitar_hero(BITMAP *image){
     t_touche *touche1 = malloc(sizeof (t_touche));
     t_touche *touche2 = malloc(sizeof(t_touche));
     t_touche *touche3 = malloc(sizeof(t_touche));
@@ -214,14 +214,14 @@ void Guitar_hero(BITMAP *image){
     free(touche3);
     free(touche4);
     free(touche5);
+    return score;
 }
 
 int guitar_hero() {
     srand(time(NULL));
     BITMAP *image = create_bitmap(800, 600);
     show_mouse(screen);
-    while (!key[KEY_ESC]) {
-        Guitar_hero(image);
-    }
-    return 0;
+    int score = 0;
+    score = Guitar_hero(image);
+    return score;
 }

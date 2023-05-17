@@ -10,6 +10,6 @@
 #include <stdio.h>
 
 int menu();
-void Guitar_hero();
+int Guitar_hero();
 int guitar_hero();
 #endif //PONCTUEL_GUITAR_HERO_H
