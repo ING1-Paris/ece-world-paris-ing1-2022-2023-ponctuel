@@ -45,6 +45,7 @@ int menu(){
     }
 }
 int main() {
+    printf("%d",2%2);
     initialiation_allegro();
     /*int choix = menu();
     switch (choix) {

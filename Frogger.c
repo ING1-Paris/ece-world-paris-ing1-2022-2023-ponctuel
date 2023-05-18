@@ -2,18 +2,26 @@
 // Created by Hugo on 10/05/2023.
 //
 #include "Frogger.h"
-BITMAP *buffer, *buffer2, *background, *dirt, *frog, *darkOak, *strippedSpruceLogTop, *grass, *water;
-PALETTE palette;
+BITMAP *buffer, *map, *collision, *background, *dirt, *frog, *darkOak, *strippedSpruceLogTop, *grass, *water, *blue_house, *orange_house, *green_house;
 SAMPLE *music;
 
 void bitmapLoader(){
-    buffer = create_bitmap(SCREEN_W,SCREEN_H*2);
-    buffer2 = create_bitmap(SCREEN_W,SCREEN_H*2);
+    buffer = create_bitmap(640,480);
     clear_bitmap(buffer);
     // Chargement de l'image
     dirt=load_bitmap("../assets/frogger/coarse_dirt.bmp", NULL);
     if (!dirt)  {
         allegro_message("pas pu trouver/charger la dirt");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
+    map=load_bitmap("../assets/frogger/map.bmp", NULL);
+    if (!map)  {
+        allegro_message("pas pu trouver/charger la map");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
+    collision=load_bitmap("../assets/frogger/collision.bmp", NULL);
+    if (!collision)  {
+        allegro_message("pas pu trouver/charger la collision");
         allegro_exit(); exit(EXIT_FAILURE);
     }
     frog=load_bitmap("../assets/frogger/frog.bmp",NULL);
@@ -41,6 +49,21 @@ void bitmapLoader(){
         allegro_message("pas pu trouver/charger water.bmp");
         allegro_exit(); exit(EXIT_FAILURE);
     }
+    blue_house=load_bitmap("../assets/frogger/blue_house.bmp",NULL);
+    if (!blue_house)  {
+        allegro_message("pas pu trouver/charger blue_house.bmp");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
+    orange_house=load_bitmap("../assets/frogger/orange_house.bmp",NULL);
+    if (!orange_house)  {
+        allegro_message("pas pu trouver/charger orange_house.bmp");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
+    green_house=load_bitmap("../assets/frogger/green_house.bmp",NULL);
+    if (!green_house)  {
+        allegro_message("pas pu trouver/charger green_house.bmp");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
     music = load_sample("../assets/frogger/Gerudo-Town.wav");
     if (!music) {
         allegro_message("Impossible de charger le fichier audio\n");
@@ -58,24 +81,17 @@ void freeBitmap(){
 }
 
 void frogger(){
+    printf("load\n");
     bitmapLoader();
+    printf("music\n");
     play_sample(music, 255, 128, 1000, 0);
-    /*for (int i = 0; i < SCREEN_W / 32 + 1; ++i) {
-        blit(dirt,screen,i*32,0,(i+1)*32,32,32,32);
-    }*/
+    printf("jeu\n");
     while (!key[KEY_ESC]){
-        stretch_blit(dirt,buffer,0,0,512,512,0,0,SCREEN_W,SCREEN_H);
-        for (int i = 0; i < SCREEN_H/(SCREEN_W/5*2); ++i) {
-            if(i%2==0){
-                //blit(darkOak,buffer,0,0,SCREEN_W/5,i*(SCREEN_W/5),SCREEN_W/5,SCREEN_W/5);
-                stretch_blit(darkOak,buffer,0,0,512,512,SCREEN_W/5,i*(SCREEN_W/5*2),SCREEN_W/5,SCREEN_W/5);
-            }
-            else{
-                //blit(strippedSpruceLogTop,buffer,0,0,SCREEN_W/5,i*(SCREEN_W/5),SCREEN_W/5,SCREEN_W/5);
-                stretch_blit(darkOak,buffer,0,0,512,512,SCREEN_W/5,(i+1)*(SCREEN_W/5*2),SCREEN_W/5,SCREEN_W/5);
-            }
-        }
-        blit(buffer,screen,0,0,0,0,SCREEN_W,SCREEN_H);
+        printf("map->buffer\n");
+        blit(map,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
+        blit(blue_house,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
+        printf("buffer->screen\n");
+        stretch_blit(buffer,screen,0,0,buffer->w,buffer->h,0,0,SCREEN_W,SCREEN_H);
         clear_bitmap(buffer);
     }
 }
