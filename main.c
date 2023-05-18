@@ -18,6 +18,7 @@ void initialiation_allegro(){
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    srand(time(NULL));
 }
 
 int menu(BITMAP *buffer){
