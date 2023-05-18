@@ -1,9 +1,6 @@
-//
-// Created by cleme on 15/05/2023.
-//
 
 //
-// Created by cleme on 12/05/2023.
+// Created by clément on 12/05/2023.
 //
 
 #ifndef PROJET_SNAKE_H
@@ -76,9 +73,10 @@ void effacerQueue(t_queue *maillon) {
         effacerQueue(maillon->suivant);
     }
 }
-void supprimerQueue(t_queue * maillon){
+int supprimerQueue(t_queue * maillon){
+    int areturn=1;
     if(maillon->suivant){
-        supprimerQueue(maillon->suivant);
+        areturn+=supprimerQueue(maillon->suivant);
     }
     blit(fond_s, buffer, maillon->posX, maillon->posY, maillon->posX, maillon->posY, 50, 50);
     blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
@@ -86,6 +84,7 @@ void supprimerQueue(t_queue * maillon){
     rest(VITSNAKE*90);
 
     free(maillon);
+    return(areturn);
 
 }//efface et libère les queues en cas de défaite
 
@@ -271,7 +270,7 @@ void caseSerpent(t_tete *tete) {
 }
 
 
-void snake() {
+int snake() {
     int defaite=0;
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
 
@@ -335,8 +334,7 @@ void snake() {
         }
         if(mur(serpent) || queueIci(serpent->suivant,serpent->cadX,serpent->cadY)){
             //printf("t'as perdu\n");
-            supprimerQueue(serpent->suivant);
-            defaite=1;
+            return(supprimerQueue(serpent->suivant)-5);
         }
         rest(VITSNAKE);
 
