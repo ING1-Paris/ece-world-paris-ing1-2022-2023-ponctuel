@@ -9,6 +9,6 @@
 
 void bitmapLoader();
 void freeBitmap();
-void frogger();
+int frogger();
 
 #endif //PONCTUEL_FROGGER_H

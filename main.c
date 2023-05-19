@@ -77,7 +77,6 @@ void afficher_tableau(BITMAP *buffer, int score1, int score2){
 int main() {
     printf("%d",2%2);
     initialiation_allegro();
-    frogger();
     BITMAP *buffer = create_bitmap(800,600);
     int score1 = 50;
     int score2 = 50;
@@ -93,10 +92,10 @@ int main() {
                     break;
                 case 2:
                     //score1 = frogger();
-                    if (score1 == 1) {
+                    if (frogger() == 1){
                         nb_ticket1++;
                         egalite = 0;
-                    } else if (score1 == 2) {
+                    } else {
                         nb_ticket2++;
                         egalite = 0;
                     }
