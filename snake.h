@@ -1,6 +1,9 @@
+//
+// Created by cleme on 15/05/2023.
+//
 
 //
-// Created by clément on 12/05/2023.
+// Created by cleme on 12/05/2023.
 //
 
 #ifndef PROJET_SNAKE_H
@@ -326,7 +329,7 @@ int snake() {
         ajouterQueue(serpent);
     }
 
-
+    int score=0;
     while (!key[KEY_ESC] && !(defaite)) {
         caseSerpent(serpent);
         if(key[KEY_R]){
@@ -334,12 +337,14 @@ int snake() {
         }
         if(mur(serpent) || queueIci(serpent->suivant,serpent->cadX,serpent->cadY)){
             //printf("t'as perdu\n");
-            return(supprimerQueue(serpent->suivant)-5);
+            score=(supprimerQueue(serpent->suivant)-5);
+            defaite=1;
         }
         rest(VITSNAKE);
 
     }
     viderSerpent(serpent);
+    return(score);
 
 }
 #endif //PROJET_SNAKE_H
