@@ -18,6 +18,8 @@ void initialiation_allegro(){
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    //pour charger les musiques
+    install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,NULL);
     srand(time(NULL));
 }
 
@@ -75,6 +77,7 @@ void afficher_tableau(BITMAP *buffer, int score1, int score2){
 int main() {
     printf("%d",2%2);
     initialiation_allegro();
+    frogger();
     BITMAP *buffer = create_bitmap(800,600);
     int score1 = 50;
     int score2 = 50;

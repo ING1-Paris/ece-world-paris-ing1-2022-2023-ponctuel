@@ -89,7 +89,7 @@ void frogger(){
     while (!key[KEY_ESC]){
         printf("map->buffer\n");
         blit(map,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
-        blit(blue_house,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
+        //masked_blit(blue_house,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
         printf("buffer->screen\n");
         stretch_blit(buffer,screen,0,0,buffer->w,buffer->h,0,0,SCREEN_W,SCREEN_H);
         clear_bitmap(buffer);
