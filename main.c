@@ -23,7 +23,7 @@ void initialiation_allegro(){
     srand(time(NULL));
 }
 
-int menu(BITMAP *buffer){
+int menu_bis(BITMAP *buffer){
     int choix = 0;
     while(choix !=1) {
         //clear_to_color(screen,makecol(255, 0, 255));
@@ -74,9 +74,42 @@ void afficher_tableau(BITMAP *buffer, int score1, int score2){
         blit(buffer,screen,0,0,0,0,SCREEN_W,SCREEN_H);
     }
 }
+
+void* fhigh_score(BITMAP * buffer,FILE * high_s,int ticket,int tab[10]){
+    int remp;
+    for(int i=0;i<10;i++){
+        fscanf(high_s,"%d\n",&tab[i]);
+    }
+    for(int i=0;i<10;i++){
+        if(ticket > tab[i]){
+            remp = tab[i];
+            tab[i] = ticket;
+            return fhigh_score(buffer,high_s,remp,tab);
+        }
+    }
+    rewind(high_s);
+    for(int i=0;i<10;i++){
+        fprintf(high_s,"\n%d\n",tab[i]);
+    }
+    while(!key[KEY_ESC]) {
+        clear(buffer);
+        for(int y=0;y<2;y++) {
+            for (int i = 0; i < 5; i++) {
+                textprintf_centre_ex(buffer, font, 400*y+200, 120 * i + 60, makecol(255, 255, 255), -1, "%d - %d",y*5 + i + 1,
+                                     tab[y*5+i]);
+            }
+        }
+        blit(buffer,screen,0,0,0,0,SCREEN_W,SCREEN_H);
+    }
+}
+
 int main() {
-    printf("%d",2%2);
     initialiation_allegro();
+    FILE* high_score = fopen("./high_score.txt","r+");
+    FILE* score = fopen("./score.txt","w");
+    if(high_score == NULL){
+        printf("Erreur d'ouverture fichier high_score");
+    }
     BITMAP *buffer = create_bitmap(800,600);
     int score1 = 50;
     int score2 = 50;
@@ -84,14 +117,14 @@ int main() {
     int nb_ticket2 = 0;
     int egalite = 1;
     int fin = 0;
-    int choix = menu(buffer);
+    int choix = menu_bis(buffer);
     while (fin !=1) {
         while (egalite == 1) {
             switch (choix) {
                 case 1:
                     break;
                 case 2:
-                    //score1 = frogger();
+                    score1 = frogger();
                     if (frogger() == 1){
                         nb_ticket1++;
                         egalite = 0;
@@ -132,8 +165,33 @@ int main() {
             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
         }
     }
+    printf("coucou\n");
+    int hs[10];
+    int ticket;
+    if(nb_ticket1 > nb_ticket2){
+        ticket = nb_ticket1;
+    } else if(nb_ticket1 < nb_ticket2){
+        ticket = nb_ticket2;
+    } else if(nb_ticket1 == nb_ticket2){
+        ticket = nb_ticket1;
+    }
+    rewind(high_score);
+    fhigh_score(buffer,high_score,ticket,hs);
+    for(int i =0;i<10;i++) {
+        printf("%d\n",hs[i]);
+    }
+    fprintf(score,"%d\n",nb_ticket1);
+    fprintf(score,"%d\n",nb_ticket2);
+    rewind(high_score);
+    int a ;
+    int b ;
+    int c ;
+    fscanf(high_score,"%d %d %d",&a,&b,&c);
+    printf("%d\n%d\n%d\n",a,b,c);
     afficher_tableau(buffer,nb_ticket1,nb_ticket2);
     allegro_exit();
+    fclose(high_score);
+    high_score = NULL;
     exit(EXIT_SUCCESS);
     return (0);
 }END_OF_MAIN();
