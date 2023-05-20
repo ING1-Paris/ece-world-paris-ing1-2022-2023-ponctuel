@@ -88,7 +88,8 @@ int frogger(){
     printf("jeu\n");
     while (!key[KEY_ESC]){
         blit(map,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
-        //masked_blit(blue_house,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
+        masked_blit(orange_house,buffer,0,0,80,255,SCREEN_W,SCREEN_H);
+        masked_blit(green_house,buffer,0,0,350,255,SCREEN_W,SCREEN_H);
         stretch_blit(buffer,screen,0,0,buffer->w,buffer->h,0,0,SCREEN_W,SCREEN_H);
         clear_bitmap(buffer);
     }
