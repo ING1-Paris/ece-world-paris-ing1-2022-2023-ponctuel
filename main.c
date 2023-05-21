@@ -121,11 +121,26 @@ int main() {
     int hs[10];
     int ticket;
     int choix;
+    int joueur = 1;
+    char joueur1[10];
+    char joueur2[10];
+    printf("Quel est le nom du premier joueur ?\n");
+    scanf("%s",joueur1);
+    printf("Quel est le nom du second joueur ?\n");
+    scanf("%s",joueur2);
     while (fin !=1) {
         egalite = 1;
         printf("Egalite : %d\n",egalite);
         printf("fin : %d\n",fin);
-        choix = menu("Jules",1);
+        if(joueur == 1) {
+            joueur = 2;
+            choix = menu(joueur1, 0);
+        } else if(joueur == 2) {
+            joueur = 1;
+            choix = menu(joueur2, 1);
+        } else {
+            return 1000;
+        }
         printf("Choix : %d\n",choix);
         while (egalite == 1) {
             switch (choix) {
