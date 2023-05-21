@@ -56,11 +56,11 @@ int Guitar_hero(BITMAP *image){
     float vitesse = 0;
     int choix = choix_difficulte(image);
     if(choix == 1){
-        vitesse = 0.00005;
+        vitesse = 0.000000005;
     } else if(choix == 2){
-        vitesse = 0.0005;
+        vitesse = 0.000005;
     } else if(choix == 3){
-        vitesse = 0.005;
+        vitesse = 0.00005;
     }
     while(!key[KEY_TAB]) {
         clear_bitmap(image);
@@ -75,7 +75,7 @@ int Guitar_hero(BITMAP *image){
         touche5->posx = l*5;
         touche5->posy = touche5->posy + 0.250*i;
         if(i<=6) {
-            i += 0.0005;
+            i += vitesse;
         }
         circlefill(image, l, SCREEN_H - 100, 30, makecol(0, 255, 0));
         circlefill(image, l * 2, SCREEN_H - 100, 30, makecol(255, 0, 0));
