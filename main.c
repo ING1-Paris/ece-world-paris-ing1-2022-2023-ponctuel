@@ -120,11 +120,12 @@ int main() {
     int fin = 0;
     int hs[10];
     int ticket;
+    int choix;
     while (fin !=1) {
         egalite = 1;
         printf("Egalite : %d\n",egalite);
         printf("fin : %d\n",fin);
-        int choix = menu("Jules",1);
+        choix = menu("Jules",1);
         printf("Choix : %d\n",choix);
         while (egalite == 1) {
             switch (choix) {
@@ -146,20 +147,20 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    printf("Egalite : %d\n", egalite);
+                    printf("fin : %d\n", fin);
+                    printf("Choix : %d\n", choix);
                     break;
                 case 1:
                     score1 = frogger();
-                    if (frogger() == 1){
+                    if (frogger() == 1) {
                         nb_ticket1++;
                         egalite = 0;
-                    } else if(frogger() == 2) {
+                    } else if (frogger() == 2) {
                         nb_ticket2++;
                         egalite = 0;
-                    } else{
-                        while(key[KEY_R]) {
+                    } else {
+                        while (key[KEY_R]) {
                             egalite = 1;
                             clear(buffer);
                             textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1,
@@ -167,9 +168,9 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    printf("Egalite : %d\n", egalite);
+                    printf("fin : %d\n", fin);
+                    printf("Choix : %d\n", choix);
                     break;
                 case 2:
                     score1 = guitar_hero();
@@ -189,28 +190,28 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    printf("Egalite : %d\n", egalite);
+                    printf("fin : %d\n", fin);
+                    printf("Choix : %d\n", choix);
                     break;
                 case 3:
                     egalite = 0;
-                    if(nb_ticket1 > nb_ticket2){
+                    if (nb_ticket1 > nb_ticket2) {
                         ticket = nb_ticket1;
-                    } else if(nb_ticket1 < nb_ticket2){
+                    } else if (nb_ticket1 < nb_ticket2) {
                         ticket = nb_ticket2;
-                    } else if(nb_ticket1 == nb_ticket2){
+                    } else if (nb_ticket1 == nb_ticket2) {
                         ticket = nb_ticket1;
                     }
                     rewind(high_score);
-                    fhigh_score(buffer,high_score,ticket,hs);
-                    for(int i =0;i<10;i++) {
-                        printf("%d\n",hs[i]);
+                    fhigh_score(buffer, high_score, ticket, hs);
+                    for (int i = 0; i < 10; i++) {
+                        printf("%d\n", hs[i]);
                     }
                     rewind(high_score);
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    printf("Egalite : %d\n", egalite);
+                    printf("fin : %d\n", fin);
+                    printf("Choix : %d\n", choix);
                     break;
                 case 4:
                     printf("Coucou1\n");
@@ -218,10 +219,13 @@ int main() {
                     printf("Coucou2\n");
                     fin = 1;
                     printf("Coucou3\n");
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    printf("Egalite : %d\n", egalite);
+                    printf("fin : %d\n", fin);
+                    printf("Choix : %d\n", choix);
                     break;
+                default:
+                    printf("ERREUR LORS DE LA MODIFICATION DU CHOIX\n");
+                    egalite = 0;
             }
         }
     }
