@@ -121,6 +121,7 @@ int main() {
     int hs[10];
     int ticket;
     while (fin !=1) {
+        egalite = 1;
         printf("Egalite : %d\n",egalite);
         printf("fin : %d\n",fin);
         int choix = menu("Jules",1);
