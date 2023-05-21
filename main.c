@@ -2,6 +2,8 @@
 #include <allegro.h>
 #include "Frogger.h"
 #include "guitar_hero.h"
+#include "menu.h"
+#include "snake.h"
 
 void initialiation_allegro(){
     allegro_init(); // appel obligatoire (var.globales, recup. infos syst�me ...)
@@ -106,7 +108,6 @@ void* fhigh_score(BITMAP * buffer,FILE * high_s,int ticket,int tab[10]){
 int main() {
     initialiation_allegro();
     FILE* high_score = fopen("./high_score.txt","r+");
-    FILE* score = fopen("./score.txt","w");
     if(high_score == NULL){
         printf("Erreur d'ouverture fichier high_score");
     }
@@ -117,22 +118,59 @@ int main() {
     int nb_ticket2 = 0;
     int egalite = 1;
     int fin = 0;
-    int choix = menu_bis(buffer);
+    int hs[10];
+    int ticket;
     while (fin !=1) {
+        printf("Egalite : %d\n",egalite);
+        printf("fin : %d\n",fin);
+        int choix = menu("Jules",1);
+        printf("Choix : %d\n",choix);
         while (egalite == 1) {
             switch (choix) {
-                case 1:
+                case 0:
+                    score1 = snake();
+                    score2 = snake();
+                    if (score1 > score2) {
+                        nb_ticket1++;
+                        egalite = 0;
+                    } else if (score1 < score2) {
+                        nb_ticket2++;
+                        egalite = 0;
+                    } else if (score1 == score2) {
+                        egalite = 1;
+                        while (!key[KEY_R]) {
+                            clear_bitmap(buffer);
+                            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1,
+                                                 "Vous etes a egalite ! Appuyer sur r pour recommencer");
+                            blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+                        }
+                    }
+                    printf("Egalite : %d\n",egalite);
+                    printf("fin : %d\n",fin);
+                    printf("Choix : %d\n",choix);
                     break;
-                case 2:
+                case 1:
                     score1 = frogger();
                     if (frogger() == 1){
                         nb_ticket1++;
                         egalite = 0;
-                    } else {
+                    } else if(frogger() == 2) {
                         nb_ticket2++;
                         egalite = 0;
+                    } else{
+                        while(key[KEY_R]) {
+                            egalite = 1;
+                            clear(buffer);
+                            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1,
+                                                 "Problème du jeu veuillez appuyer sur r pour recommncer");
+                            blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+                        }
                     }
-                case 3:
+                    printf("Egalite : %d\n",egalite);
+                    printf("fin : %d\n",fin);
+                    printf("Choix : %d\n",choix);
+                    break;
+                case 2:
                     score1 = guitar_hero();
                     score2 = guitar_hero();
                     if (score1 > score2) {
@@ -150,48 +188,49 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
+                    printf("Egalite : %d\n",egalite);
+                    printf("fin : %d\n",fin);
+                    printf("Choix : %d\n",choix);
+                    break;
+                case 3:
+                    egalite = 0;
+                    if(nb_ticket1 > nb_ticket2){
+                        ticket = nb_ticket1;
+                    } else if(nb_ticket1 < nb_ticket2){
+                        ticket = nb_ticket2;
+                    } else if(nb_ticket1 == nb_ticket2){
+                        ticket = nb_ticket1;
+                    }
+                    rewind(high_score);
+                    fhigh_score(buffer,high_score,ticket,hs);
+                    for(int i =0;i<10;i++) {
+                        printf("%d\n",hs[i]);
+                    }
+                    rewind(high_score);
+                    printf("Egalite : %d\n",egalite);
+                    printf("fin : %d\n",fin);
+                    printf("Choix : %d\n",choix);
+                    break;
+                case 4:
+                    printf("Coucou1\n");
+                    egalite = 0;
+                    printf("Coucou2\n");
+                    fin = 1;
+                    printf("Coucou3\n");
+                    printf("Egalite : %d\n",egalite);
+                    printf("fin : %d\n",fin);
+                    printf("Choix : %d\n",choix);
+                    break;
             }
         }
-        while(1) {
-            clear(buffer);
-            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1,"Voulez-vous arretez ? Appuyer sur a pour non et b pour oui");
-            if(key[KEY_B]){
-                fin = 1;
-                break;
-            } else if(key[KEY_Q]) {
-                egalite = 1;
-                break;
-            }
-            blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
-        }
     }
-    printf("coucou\n");
-    int hs[10];
-    int ticket;
-    if(nb_ticket1 > nb_ticket2){
-        ticket = nb_ticket1;
-    } else if(nb_ticket1 < nb_ticket2){
-        ticket = nb_ticket2;
-    } else if(nb_ticket1 == nb_ticket2){
-        ticket = nb_ticket1;
-    }
-    rewind(high_score);
-    fhigh_score(buffer,high_score,ticket,hs);
-    for(int i =0;i<10;i++) {
-        printf("%d\n",hs[i]);
-    }
-    fprintf(score,"%d\n",nb_ticket1);
-    fprintf(score,"%d\n",nb_ticket2);
-    rewind(high_score);
-    int a ;
-    int b ;
-    int c ;
-    fscanf(high_score,"%d %d %d",&a,&b,&c);
-    printf("%d\n%d\n%d\n",a,b,c);
     afficher_tableau(buffer,nb_ticket1,nb_ticket2);
     allegro_exit();
     fclose(high_score);
-    high_score = NULL;
+    high_score = NULL;/*
+    int a = 0;
+    a = menu("Jules",1);
+    printf("%d\n",a);*/
     exit(EXIT_SUCCESS);
     return (0);
 }END_OF_MAIN();
