@@ -2,6 +2,8 @@
 #include <allegro.h>
 #include "Frogger.h"
 #include "guitar_hero.h"
+#include "menu.h"
+#include "snake.h"
 
 void initialiation_allegro(){
     allegro_init(); // appel obligatoire (var.globales, recup. infos syst�me ...)
@@ -106,7 +108,6 @@ void* fhigh_score(BITMAP * buffer,FILE * high_s,int ticket,int tab[10]){
 int main() {
     initialiation_allegro();
     FILE* high_score = fopen("./high_score.txt","r+");
-    FILE* score = fopen("./score.txt","w");
     if(high_score == NULL){
         printf("Erreur d'ouverture fichier high_score");
     }
@@ -117,13 +118,16 @@ int main() {
     int nb_ticket2 = 0;
     int egalite = 1;
     int fin = 0;
-    int choix = menu_bis(buffer);
+    int hs[10];
+    int ticket;
     while (fin !=1) {
+        int choix = menu("Jules",1);
         while (egalite == 1) {
             switch (choix) {
-                case 1:
+                case 0:
+                    snake();
                     break;
-                case 2:
+                case 1:
                     score1 = frogger();
                     if (frogger() == 1){
                         nb_ticket1++;
@@ -132,7 +136,8 @@ int main() {
                         nb_ticket2++;
                         egalite = 0;
                     }
-                case 3:
+                    break;
+                case 2:
                     score1 = guitar_hero();
                     score2 = guitar_hero();
                     if (score1 > score2) {
@@ -150,6 +155,21 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
+                    break;
+                case 3:
+                    if(nb_ticket1 > nb_ticket2){
+                        ticket = nb_ticket1;
+                    } else if(nb_ticket1 < nb_ticket2){
+                        ticket = nb_ticket2;
+                    } else if(nb_ticket1 == nb_ticket2){
+                        ticket = nb_ticket1;
+                    }
+                    rewind(high_score);
+                    fhigh_score(buffer,high_score,ticket,hs);
+                    for(int i =0;i<10;i++) {
+                        printf("%d\n",hs[i]);
+                    }
+                    rewind(high_score);
             }
         }
         while(1) {
@@ -165,29 +185,6 @@ int main() {
             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
         }
     }
-    printf("coucou\n");
-    int hs[10];
-    int ticket;
-    if(nb_ticket1 > nb_ticket2){
-        ticket = nb_ticket1;
-    } else if(nb_ticket1 < nb_ticket2){
-        ticket = nb_ticket2;
-    } else if(nb_ticket1 == nb_ticket2){
-        ticket = nb_ticket1;
-    }
-    rewind(high_score);
-    fhigh_score(buffer,high_score,ticket,hs);
-    for(int i =0;i<10;i++) {
-        printf("%d\n",hs[i]);
-    }
-    fprintf(score,"%d\n",nb_ticket1);
-    fprintf(score,"%d\n",nb_ticket2);
-    rewind(high_score);
-    int a ;
-    int b ;
-    int c ;
-    fscanf(high_score,"%d %d %d",&a,&b,&c);
-    printf("%d\n%d\n%d\n",a,b,c);
     afficher_tableau(buffer,nb_ticket1,nb_ticket2);
     allegro_exit();
     fclose(high_score);
