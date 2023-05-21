@@ -120,11 +120,12 @@ int main() {
     int fin = 0;
     int hs[10];
     int ticket;
+    int choix;
     while (fin !=1) {
         egalite = 1;
         printf("Egalite : %d\n",egalite);
         printf("fin : %d\n",fin);
-        int choix = menu("Jules",1);
+        choix = menu("Jules",1);
         printf("Choix : %d\n",choix);
         while (egalite == 1) {
             switch (choix) {
