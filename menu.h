@@ -23,7 +23,7 @@ typedef struct{
 
 t_personnage persos[2];
  BITMAP* fondMenu;
-t_batiment opBat(t_batiment batiment,t_personnage personnages[2]){//ensemble des opérations devant être effectuées par chaque bâtiment à chaque tour de boucle
+t_batiment opBat(BITMAP * buffer,t_batiment batiment,t_personnage personnages[2]){//ensemble des opérations devant être effectuées par chaque bâtiment à chaque tour de boucle
     int proximite=0;//indique si on est proche d'un joueur
     int texture=1;
     blit(fondMenu,buffer,batiment.posX-40,batiment.posY-40,batiment.posX-40,batiment.posY-40,80,80);
@@ -70,7 +70,7 @@ t_batiment opBat(t_batiment batiment,t_personnage personnages[2]){//ensemble des
     masked_blit(batiment.texture,buffer,texture*80,0,batiment.posX-40,batiment.posY-40,80,80);
     return(batiment);
 }
-t_personnage opPerso(t_personnage perso){
+t_personnage opPerso(BITMAP *buffer,t_personnage perso){
     blit(fondMenu,buffer,perso.posX-20,perso.posY-20,perso.posX-20,perso.posY-20,40,40);
     if((key[KEY_W] && perso.identite==0 || key[KEY_UP] && perso.identite==1) && perso.posY>=(0+vitessePerso)){
         perso.posY-=vitessePerso;
@@ -89,6 +89,7 @@ t_personnage opPerso(t_personnage perso){
 }
 
 int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
+    BITMAP *buffer= create_bitmap(800,600);
     t_batiment batiments[nombreStructures];
     t_personnage personnages[2];
     for (int i=0;i<nombreStructures;i++){
@@ -171,13 +172,13 @@ int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
 
     while (!key[KEY_ESC]){
         for (int i = 0; i < nombreStructures; ++i) {
-            batiments[i]= opBat(batiments[i],personnages);
+            batiments[i]= opBat(buffer,batiments[i],personnages);
             if(batiments[i].active){
                 return(batiments[i].action);
             }
         }
         for (int i = 0; i < 2; ++i) {
-            personnages[i]= opPerso(personnages[i]);
+            personnages[i]= opPerso(buffer,personnages[i]);
         }
         blit(buffer,screen,0,0,0,0,SCREEN_W,SCREEN_H);
         rest(50);
