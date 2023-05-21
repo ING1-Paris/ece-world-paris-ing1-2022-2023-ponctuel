@@ -344,6 +344,7 @@ int snake() {
 
     }
     viderSerpent(serpent);
+    //printf("return score: %d\n",score);
     return(score);
 
 }

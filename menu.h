@@ -88,7 +88,7 @@ t_personnage opPerso(BITMAP *buffer,t_personnage perso){
     return(perso);
 }
 
-int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
+int menu(char* nom,int idjoueur,char* nom1,int tickets1,char* nom2,int tickets2){//prend en paramètre le nom du joueur
     BITMAP *buffer= create_bitmap(800,600);
     t_batiment batiments[nombreStructures];
     t_personnage personnages[2];
@@ -160,13 +160,15 @@ int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    textprintf_right_ex(fondMenu,font,460,480, makecol(255,255,255),-1,"%s a %d tickets",nom1,tickets1);
+    textprintf_right_ex(fondMenu,font,460,500, makecol(255,255,255),-1,"%s a %d tickets",nom2,tickets2);
 
-    textprintf_right_ex(fondMenu,font,480,580,makecol(255,255,255),-1,"C'est a %s de choisir un jeu",nom);
+    textprintf_right_ex(fondMenu,font,450,580,makecol(255,255,255),-1,"C'est a %s de choisir un jeu",nom);
     if(idjoueur==0){
-        textprintf_right_ex(fondMenu,font,480,490,makecol(255,255,255),-1,"%s est à gauche et utilise ZQSD",nom);
+        textprintf_right_ex(fondMenu,font,450,590,makecol(255,255,255),-1,"%s est à gauche et utilise ZQSD",nom);
     }
     else{
-        textprintf_right_ex(fondMenu,font,480,590,makecol(255,255,255),-1,"%s est à droite et utilise les fleches",nom);
+        textprintf_right_ex(fondMenu,font,450,590,makecol(255,255,255),-1,"%s est à droite et utilise les fleches",nom);
     }
     blit(fondMenu,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
 
@@ -178,7 +180,7 @@ int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
 
             batiments[i]= opBat(buffer,batiments[i],personnages);
             if(batiments[i].active){
-                printf("Retour du menu: %d\n",batiments[i].action);
+                //printf("Retour du menu: %d\n",batiments[i].action);
                 return(batiments[i].action);
             }
         }

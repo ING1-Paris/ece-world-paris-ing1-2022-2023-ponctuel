@@ -45,7 +45,7 @@ int menu_bis(BITMAP *buffer){
     }
 }
 
-void afficher_tableau(BITMAP *buffer, int score1, int score2){
+void afficher_tableau(BITMAP *buffer, int score1, int score2,char* nom1, char* nom2){
     BITMAP * glitch1 = load_bitmap("../assets/menu/ImageGlitch1.bmp",NULL);
     BITMAP * glitch2 = load_bitmap("../assets/menu/ImageGlitch2.bmp",NULL);
     BITMAP * glitch3 = load_bitmap("../assets/menu/ImageGlitch3.bmp",NULL);
@@ -55,8 +55,8 @@ void afficher_tableau(BITMAP *buffer, int score1, int score2){
         int alea = rand()%50;
         int posx = rand()%800;
         int posy = rand()%600;
-        textprintf_centre_ex(buffer, font, 400, 100, makecol(255, 255, 255), -1, "Score du joueur 1 : %d", score1);
-        textprintf_centre_ex(buffer, font, 400, 200, makecol(255, 255, 255), -1, "Score du joueur 2 : %d", score2);
+        textprintf_centre_ex(buffer, font, 400, 100, makecol(255, 255, 255), -1, "Score de %s : %d",nom1, score1);
+        textprintf_centre_ex(buffer, font, 400, 200, makecol(255, 255, 255), -1, "Score de %s : %d",nom2, score2);
         if(alea == 0){
             blit(glitch1,buffer,0,0,posx,posy,80,82);
         } else if(alea == 1){
@@ -67,9 +67,9 @@ void afficher_tableau(BITMAP *buffer, int score1, int score2){
             blit(glitch4,buffer,0,0,posx,posy,122,101);
         }
         if(score1>score2) {
-            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "Joueur 1 est le vainqueur !");
+            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "%s est le vainqueur !",nom1);
         } else if(score1<score2) {
-            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "Joueur 2 est le vainqueur !");
+            textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "nom2 est le vainqueur !",nom2);
         } if(score1==score2) {
             textprintf_centre_ex(buffer, font, 400, 300, makecol(255, 255, 255), -1, "Vous êtes a égalité !");
         }
@@ -104,6 +104,11 @@ void* fhigh_score(BITMAP * buffer,FILE * high_s,int ticket,int tab[10]){
         blit(buffer,screen,0,0,0,0,SCREEN_W,SCREEN_H);
     }
 }
+typedef struct{
+    int score;
+    int nb_tickets;
+    char nom[50];
+}t_joueur;
 
 int main() {
     initialiation_allegro();
@@ -112,6 +117,12 @@ int main() {
         printf("Erreur d'ouverture fichier high_score");
     }
     BITMAP *buffer = create_bitmap(800,600);
+    t_joueur joueurs[2];
+    joueurs[0].score=50;
+    joueurs[0].nb_tickets=5;
+    joueurs[1].score=50;
+    joueurs[1].nb_tickets=5;
+
     int score1 = 50;
     int score2 = 50;
     int nb_ticket1 = 0;
@@ -121,24 +132,39 @@ int main() {
     int hs[10];
     int ticket;
     int choix;
+    int score;//variable temporaire pour le calcul des scores du frogger
+    int tour=0;
+    printf("\nVeuillez entrer le nom du premier joueur\n");
+    scanf("%s",joueurs[0].nom);
+    fflush(stdin);
+    printf("Veuillez entrer le nom du deuxieme joueur\n");
+    scanf("%s",joueurs[1].nom);
+    fflush(stdin);
+    printf("\nChangez de fenetre pour jouer !\n");
     while (fin !=1) {
+       // printf("debut menu\n");
         egalite = 1;
-        printf("Egalite : %d\n",egalite);
-        printf("fin : %d\n",fin);
-        choix = menu("Jules",1);
-        printf("Choix : %d\n",choix);
+        //printf("Egalite : %d\n",egalite);
+       // printf("fin : %d\n",fin);
+        choix = menu(joueurs[tour].nom,tour,joueurs[0].nom,joueurs[0].nb_tickets,joueurs[1].nom,joueurs[1].nb_tickets);
+        //printf("Choix : %d, %d\n",choix,&choix);
+        //printf("début boucle\n");
         while (egalite == 1) {
+            if(!(joueurs[0].nb_tickets && joueurs[1].nb_tickets)){
+                fin=1;
+                break;
+            }
             switch (choix) {
                 case 0:
-                    score1 = snake();
-                    score2 = snake();
-                    if (score1 > score2) {
-                        nb_ticket1++;
+                    joueurs[0].score = snake();
+                    joueurs[1].score = snake();
+                    if (joueurs[0].score > joueurs[1].score) {
+                        joueurs[0].nb_tickets++;
                         egalite = 0;
-                    } else if (score1 < score2) {
-                        nb_ticket2++;
+                    } else if (joueurs[0].score < joueurs[1].score) {
+                        joueurs[1].nb_tickets++;
                         egalite = 0;
-                    } else if (score1 == score2) {
+                    } else if (joueurs[0].score == joueurs[1].score) {
                         egalite = 1;
                         while (!key[KEY_R]) {
                             clear_bitmap(buffer);
@@ -147,17 +173,20 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    //printf("Egalite : %d\n",egalite);
+                    //printf("fin : %d\n",fin);
+                    //printf("Choix : %d\n",choix);
+                    joueurs[0].nb_tickets--;
+                    joueurs[1].nb_tickets--;
+                    tour=(tour+1)%2;
                     break;
                 case 1:
-                    score1 = frogger();
-                    if (frogger() == 1){
-                        nb_ticket1++;
+                    score = frogger();
+                    if (score == 1){
+                        joueurs[0].nb_tickets++;
                         egalite = 0;
-                    } else if(frogger() == 2) {
-                        nb_ticket2++;
+                    } else if(score == 2) {
+                        joueurs[1].nb_tickets++;
                         egalite = 0;
                     } else{
                         while(key[KEY_R]) {
@@ -168,20 +197,23 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    //printf("Egalite : %d\n",egalite);
+                    //printf("fin : %d\n",fin);
+                    //printf("Choix : %d\n",choix);
+                    tour=(tour+1)%2;
+                    joueurs[0].nb_tickets--;
+                    joueurs[1].nb_tickets--;
                     break;
                 case 2:
-                    score1 = guitar_hero();
-                    score2 = guitar_hero();
-                    if (score1 > score2) {
-                        nb_ticket1++;
+                    joueurs[0].score = guitar_hero();
+                    joueurs[1].score = guitar_hero();
+                    if (joueurs[0].score > joueurs[1].score) {
+                        joueurs[0].nb_tickets++;
                         egalite = 0;
-                    } else if (score1 < score2) {
-                        nb_ticket2++;
+                    } else if (joueurs[0].score < joueurs[1].score) {
+                        joueurs[1].nb_tickets++;
                         egalite = 0;
-                    } else if (score1 == score2) {
+                    } else if (joueurs[0].score == joueurs[1].score) {
                         egalite = 1;
                         while (!key[KEY_R]) {
                             clear_bitmap(buffer);
@@ -190,18 +222,21 @@ int main() {
                             blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
                         }
                     }
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    //printf("Egalite : %d\n",egalite);
+                    //printf("fin : %d\n",fin);
+                    //printf("Choix : %d\n",choix);
+                    tour=(tour+1)%2;
+                    joueurs[0].nb_tickets--;
+                    joueurs[1].nb_tickets--;
                     break;
                 case 3:
                     egalite = 0;
-                    if(nb_ticket1 > nb_ticket2){
-                        ticket = nb_ticket1;
-                    } else if(nb_ticket1 < nb_ticket2){
-                        ticket = nb_ticket2;
-                    } else if(nb_ticket1 == nb_ticket2){
-                        ticket = nb_ticket1;
+                    if(joueurs[0].nb_tickets > joueurs[1].nb_tickets){
+                        ticket = joueurs[0].nb_tickets;
+                    } else if(joueurs[0].nb_tickets < joueurs[1].nb_tickets){
+                        ticket = joueurs[1].nb_tickets;
+                    } else if(joueurs[0].nb_tickets == joueurs[1].nb_tickets){
+                        ticket = joueurs[0].nb_tickets;
                     }
                     rewind(high_score);
                     fhigh_score(buffer,high_score,ticket,hs);
@@ -209,24 +244,30 @@ int main() {
                         printf("%d\n",hs[i]);
                     }
                     rewind(high_score);
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    //printf("Egalite : %d\n",egalite);
+                   // printf("fin : %d\n",fin);
+                    //printf("Choix : %d\n",choix);
+                    egalite=0;
                     break;
                 case 4:
-                    printf("Coucou1\n");
+                    //printf("Coucou1\n");
                     egalite = 0;
-                    printf("Coucou2\n");
+                    //printf("Coucou2\n");
                     fin = 1;
-                    printf("Coucou3\n");
-                    printf("Egalite : %d\n",egalite);
-                    printf("fin : %d\n",fin);
-                    printf("Choix : %d\n",choix);
+                    //printf("Coucou3\n");
+                   //printf("Egalite : %d\n",egalite);
+                    //printf("fin : %d\n",fin);
+                   //printf("Choix : %d\n",choix);
                     break;
+                default:
+                    printf("ERREUR LORS DE LA MODIFICATION DU CHOIX\n");
+                    egalite=0;
             }
+            //printf("\n fin du switch\n");
         }
+
     }
-    afficher_tableau(buffer,nb_ticket1,nb_ticket2);
+    afficher_tableau(buffer,joueurs[0].nb_tickets,joueurs[1].nb_tickets,joueurs[0].nom,joueurs[1].nom);
     allegro_exit();
     fclose(high_score);
     high_score = NULL;/*
