@@ -2,7 +2,7 @@
 // Created by Hugo on 10/05/2023.
 //
 #include "Frogger.h"
-BITMAP *buffer, *bufferCollisions, *map, *mapCollisions, *longDarkOak, *darkOak, *smallDarkOak, *longOak, *oak, *smallOak, *longLogCollisions, *logCollisions, *smallLogCollisions, *blue_house, *orange_house, *green_house, *green_frog, *red_frog;
+BITMAP *buffer, *bufferCollisions, *map, *mapCollisions, *longDarkOak, *darkOak, *smallDarkOak, *longOak, *oak, *smallOak, *longLogCollisions, *logCollisions, *smallLogCollisions, *longLogCollisionsLeft, *logCollisionsLeft, *smallLogCollisionsLeft, *blue_house, *orange_house, *green_house, *green_frog, *red_frog;
 SAMPLE *music;
 
 void delay(int milli_seconds)
@@ -87,6 +87,21 @@ void bitmapLoader(){
         allegro_message("pas pu trouver/charger le smallLogCollisions");
         allegro_exit(); exit(EXIT_FAILURE);
     }
+    longLogCollisionsLeft=load_bitmap("../assets/frogger/long_log_collisions_left.bmp",NULL);
+    if (!longLogCollisionsLeft)  {
+        allegro_message("pas pu trouver/charger le longLogCollisionsLeft");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
+    logCollisionsLeft=load_bitmap("../assets/frogger/log_collisions_left.bmp",NULL);
+    if (!logCollisionsLeft)  {
+        allegro_message("pas pu trouver/charger le logCollisionsLeft");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
+    smallLogCollisionsLeft=load_bitmap("../assets/frogger/small_log_collisions_left.bmp",NULL);
+    if (!smallLogCollisionsLeft)  {
+        allegro_message("pas pu trouver/charger le smallLogCollisionsLeft");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
     blue_house=load_bitmap("../assets/frogger/blue_house.bmp",NULL);
     if (!blue_house)  {
         allegro_message("pas pu trouver/charger blue_house.bmp");
@@ -132,6 +147,9 @@ void freeBitmap(){
     destroy_bitmap(longLogCollisions);
     destroy_bitmap(logCollisions);
     destroy_bitmap(smallLogCollisions);
+    destroy_bitmap(longLogCollisionsLeft);
+    destroy_bitmap(logCollisionsLeft);
+    destroy_bitmap(smallLogCollisionsLeft);
     destroy_bitmap(blue_house);
     destroy_bitmap(orange_house);
     destroy_bitmap(green_house);
@@ -181,6 +199,7 @@ Frog* createFrog(int x, int y, BITMAP *sprite){
     frog->x = x;
     frog->y = y;
     frog->sprite = sprite;
+    frog->alive = 1;
     printf("frog cree\n");
     return frog;
 }
@@ -299,6 +318,48 @@ int calculCollisions(int x, int y, BITMAP *colisions){
 }
 
 
+void frogOnLog(Frog *frog, int speed){
+    if(speed != 0){
+        if(frog->x > SCREEN_W-10){
+            frog->x = -10;
+        }
+        else if(frog->x < -10){
+            frog->x = SCREEN_W-10;
+        }
+        if (speed > 0){
+            speed -= 1;
+            frog->x += 1;
+        } else {
+            speed += 1;
+            frog->x -= 1;
+        }
+        frogOnLog(frog, speed);
+        delay(1);
+    }
+}
+
+
+void detectLog(Frog *frog, BITMAP *collisions){
+    int color = getpixel(collisions, frog->x+8, frog->y+8);
+    if (color == makecol(0, 250, 0)){
+        frogOnLog(frog, 1);
+    }else if (color == makecol(0, 200, 0)){
+        frogOnLog(frog, -1);
+    }else if (color == makecol(0, 150, 0)){
+        frogOnLog(frog, 2);
+    }else if (color == makecol(0, 100, 0)){
+        frogOnLog(frog, -2);
+    }
+}
+
+
+int checkBorder(Frog *frog){
+    if (frog->x < 0 || frog->x > SCREEN_W-16){
+        frog->alive = 0;
+    }
+}
+
+
 int conditionVictoire(Frog *frog){
     if (frog->y < 16){
         return 1;
@@ -331,10 +392,10 @@ int frogger(){
     log1 = *createLog(300, 368, 2, longOak, longLogCollisions);
     log2 = *createLog(0, 288, 2, oak, logCollisions);
     log3 = *createLog(0, 256, 1, smallOak, smallLogCollisions);
-    log4 = *createLog(300, 272, -2, longDarkOak, longLogCollisions);
-    log5 = *createLog(0, 384, -2, darkOak, logCollisions);
-    log6 = *createLog(0, 240, -1, smallDarkOak, smallLogCollisions);
-    log7 = *createLog(300, 0, 1, longOak, longLogCollisions);
+    log4 = *createLog(300, 272, -2, longDarkOak, longLogCollisionsLeft);
+    log5 = *createLog(0, 384, -2, darkOak, logCollisionsLeft);
+    log6 = *createLog(0, 240, -1, smallDarkOak, smallLogCollisionsLeft);
+    log7 = *createLog(300, 0, 2, longOak, longLogCollisions);
 
 
     printf("create frog\n");
@@ -368,12 +429,16 @@ int frogger(){
         moveLog(&log7, log7.speed);
 
 
-        drawFrog(&frog1);
-        drawFrog(&frog2);
+        if (frog1.alive == 1) drawFrog(&frog1);
+        if (frog2.alive == 1) drawFrog(&frog2);
 
 
         moveFrog1(&frog1, cycleJeu);
         moveFrog2(&frog2, cycleJeu);
+
+
+        detectLog(&frog1, bufferCollisions);
+        detectLog(&frog2, bufferCollisions);
 
 
         masked_blit(orange_house,buffer,0,0,80,255,SCREEN_W,SCREEN_H);
@@ -384,12 +449,19 @@ int frogger(){
         clear_bitmap(buffer);
         delay(20);
         cycleJeu++;
+
+
+        checkBorder(&frog1);
+        checkBorder(&frog2);
+
+
         if (checkVictoire(&frog1, &frog2) != 0){
             delay(5000);
             stop_sample(music);
             freeBitmap();
             return checkVictoire(&frog1, &frog2);
         }
+
     }
     stop_sample(music);
     freeBitmap();

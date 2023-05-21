@@ -19,6 +19,7 @@ BITMAP *colisions;
 typedef struct Frog{
 int x;
 int y;
+int alive;
 BITMAP *sprite;
 }Frog;
 
@@ -32,6 +33,7 @@ Frog* createFrog(int x, int y, BITMAP *sprite);
 void drawFrog(Frog *frog);
 void moveFrog(Frog *frog);
 int calculCollisions(int x, int y, BITMAP *colisions);
+int calculVide(int x, int y, BITMAP *colisions);
 int conditionVictoire(Frog *frog);
 int checkVictoire(Frog *frog1, Frog *frog2);
 int frogger();
