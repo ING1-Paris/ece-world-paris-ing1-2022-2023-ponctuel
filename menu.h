@@ -170,10 +170,15 @@ int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
     }
     blit(fondMenu,buffer,0,0,0,0,SCREEN_W,SCREEN_H);
 
+    while(key[KEY_ESC]){
+        rest(1);
+    }
     while (!key[KEY_ESC]){
         for (int i = 0; i < nombreStructures; ++i) {
+
             batiments[i]= opBat(buffer,batiments[i],personnages);
             if(batiments[i].active){
+                printf("Retour du menu: %d\n",batiments[i].action);
                 return(batiments[i].action);
             }
         }
@@ -185,7 +190,7 @@ int menu(char* nom,int idjoueur){//prend en paramètre le nom du joueur
 
     }
 
-
+return(-1);
 }
 
 
