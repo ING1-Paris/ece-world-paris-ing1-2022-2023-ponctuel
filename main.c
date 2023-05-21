@@ -111,6 +111,7 @@ int main() {
         printf("Erreur d'ouverture fichier high_score");
     }
     BITMAP *buffer = create_bitmap(800,600);
+    int win = 0;
     int score1 = 50;
     int score2 = 50;
     int nb_ticket1 = 0;
@@ -124,11 +125,11 @@ int main() {
                 case 1:
                     break;
                 case 2:
-                    score1 = frogger();
-                    if (frogger() == 1){
+                    win = frogger();
+                    if (win == 1){
                         nb_ticket1++;
                         egalite = 0;
-                    } else {
+                    } else if (win == 2){
                         nb_ticket2++;
                         egalite = 0;
                     }
