@@ -153,10 +153,10 @@ int main() {
                     break;
                 case 1:
                     score1 = frogger();
-                    if (frogger() == 1){
+                    if (score1 == 1){
                         nb_ticket1++;
                         egalite = 0;
-                    } else if(frogger() == 2) {
+                    } else if(score1 == 2) {
                         nb_ticket2++;
                         egalite = 0;
                     } else{
