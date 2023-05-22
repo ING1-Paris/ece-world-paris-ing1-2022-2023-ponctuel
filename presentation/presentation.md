@@ -157,7 +157,7 @@ Pour lancer un jeu, il suffit de diriger son personnage vers l'une des icone de 
 
 ---
 
-![bg :10%](https://image.winudf.com/v2/image/Y29tLnNuYWtlY29tcGFueS5zbmFrZWdhbWVfc2NyZWVuXzFfanhsM21pams/screen-1.jpg?fakeurl=1&type=.jpg)
+![bg :10%](./images/snake.png)
 
 # Snake à 2 joueurs
 

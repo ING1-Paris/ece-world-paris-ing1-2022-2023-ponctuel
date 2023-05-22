@@ -2,7 +2,7 @@
 // Created by Hugo on 10/05/2023.
 //
 #include "Frogger.h"
-BITMAP *buffer, *bufferCollisions, *map, *mapCollisions, *longDarkOak, *darkOak, *smallDarkOak, *longOak, *oak, *smallOak, *longLogCollisions, *logCollisions, *smallLogCollisions, *longLogCollisionsLeft, *logCollisionsLeft, *smallLogCollisionsLeft, *blue_house, *orange_house, *green_house, *green_frog, *red_frog;
+BITMAP *intro, *buffer, *bufferCollisions, *map, *mapCollisions, *longDarkOak, *darkOak, *smallDarkOak, *longOak, *oak, *smallOak, *longLogCollisions, *logCollisions, *smallLogCollisions, *longLogCollisionsLeft, *logCollisionsLeft, *smallLogCollisionsLeft, *blue_house, *orange_house, *green_house, *green_frog, *red_frog;
 SAMPLE *music;
 
 void delay(int milli_seconds)
@@ -32,6 +32,11 @@ void bitmapLoader(){
 
 
     // Chargement de l'image
+    intro=load_bitmap("../assets/frogger/intro.bmp", NULL);
+    if (!intro)  {
+        allegro_message("pas pu trouver/charger l'image");
+        allegro_exit(); exit(EXIT_FAILURE);
+    }
     map=load_bitmap("../assets/frogger/map.bmp", NULL);
     if (!map)  {
         allegro_message("pas pu trouver/charger la map");
