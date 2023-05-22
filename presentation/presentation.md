@@ -101,7 +101,7 @@ Pour lancer un jeu, il suffit de diriger son personnage vers l'une des icone de 
 
 *Réalisé par : **Jules** (100%)*
 
-- Il y'a 4 touches (D, F, J, K) qui correspondent aux 4 cordes de la guitare.
+- Il y'a 5 touches (A, Z, E, R, T) qui correspondent aux 5 cordes de la guitare.
 - Les notes tombent du haut de l'écran vers le bas.
 - Le joueur doit appuyer sur la touche correspondant à la note au bon moment.
 - Si le joueur appuie sur la touche au bon moment, il gagne un point.
@@ -119,71 +119,39 @@ Pour lancer un jeu, il suffit de diriger son personnage vers l'une des icone de 
 
 ### Structures
 
-- `struct Note`
-    - `int x`
-    - `int y`
-    - `int vitesse`
-    - `int touche`
-    - `int estAppuyee`
-    - `int estAffichee`
+- `struct t_touche`
+    - `int posx`
+    - `float posy`
 
 ---
 ![bg right:50%](https://th.bing.com/th/id/OIP.55U-8PJe_zHnA7d7grEveQHaGO?pid=ImgDet&rs=1)
 
 ### Fonctions
 
-- `void initialiserNotes()`
-- `void afficherNotes()`
-- `void detecterAppuiTouche()`
-- `void afficherScore()`
-- `void afficherGagnant()`
-
-
-
-### Tableaux
-
-- `struct Note notes[20]`
+- `int choix_difficulte(BITMAP *image)`
+- `int Guitar_hero(BITMAP *image)`
+- `int guitar_hero()`
 
 
 ---
 
-![bg right:42%](images/algorigramme_guitarhero_partie1.png)
-
-# GUITAR HERO
-
-### Graphe d'appel
-
-<br>
-
-<div class="mermaid">
-%%{init: {'theme':'neutral'}}%%
-flowchart LR
-    GuitarHero --> initialiserNotes
-    GuitarHero --> afficherNotes
-    GuitarHero --> detecterAppuiTouche
-    GuitarHero --> afficherScore
-    GuitarHero --> afficherGagnant
-</div>
-
-
----
-
-![bg right:42%](images/algorigramme_guitarhero_partie2.png)
 
 # GUITAR HERO
 
 ### Logigramme
+
+![bg right:42%](images/algorigramme_guitarehero.png)
 
 ---
 ![bg right:50%](https://th.bing.com/th/id/R.079b197c46059da0428789b4fabe5e8b?rik=RsM3X9D4%2fwSADw&pid=ImgRaw&r=0)
 
 # Snake à 2 joueurs
 
-*Réalisé par : **Léon** (100%)*
+*Réalisé par : **Clément** (100%)*
 
-- Le jeu se joue à deux joueurs.
+- Le jeu se joue à un joueurs.
 - Géré avec des listes chaînées
-- Les 2 joueurs se voient attribuer chacun un serpent.
+- Les 2 joueurs se voient lancer le jeu à la suite.
 - Le but du jeu est de manger le plus de pommes possible tout en évitant de se mordre la queue, de se prendre un mur ou le corps du serpent adverse.
 
 
@@ -193,32 +161,20 @@ flowchart LR
 
 # Snake à 2 joueurs
 
-### Graphe d'appel
-
-<br>
-
-<div class="mermaid">
-%%{init: {'theme':'neutral'}}%%
-flowchart LR
-    snake --> initialiserSerpent
-    initialiserSerpent --> afficherSerpent
-    snake --> deplacerSerpent
-    deplacerSerpent --> detecterCollision
-    detecterCollision --> afficherGagnant
-    afficherGagnant --> afficherScore
-    afficherScore --> afficherGagnant
-</div>
-
-
 ---
 # Structures
 
-- `struct Serpent`
-    - `int x, y`
-    - `int direction`
-    - `int previous_pos_x, previous_pos_y`
-    - `struct Snake *next`
-    - `bool is_head`
+- `struct Queue`
+    - `int posx, posy`
+    - `int cadx, cady`
+    - `struct Queue *suivant`
+
+- `struct Tete`
+    - `int posx, posy`
+    - `int cadx, cady`
+    - `int direct, futDirect`
+    - `t_queue *suivant`
+    - `int pomX, pomY`
 
 ![bg right:55%](https://th.bing.com/th/id/OIP.55U-8PJe_zHnA7d7grEveQHaGO?pid=ImgDet&rs=1)
 
@@ -228,25 +184,25 @@ flowchart LR
 ![bg right:50%](https://th.bing.com/th/id/OIP.55U-8PJe_zHnA7d7grEveQHaGO?pid=ImgDet&rs=1)
 
 
-- `void initSNAKE()`
-- `void initfood()`
-- `void lib_memoire()`
-- `void draw_SNAKE()`
-- `void add_block()`
-- `void move_SNAKE()`
-- `void gestion_mouvements()`
-- `collision_mort()`
-- `collision_food()`
+- `void viderQueue(t_queue* maillon)`
+- `void viderSerpent(t_tete* tete)`
+- `int mur(t_tete* tete)`
+- `int queueIci(t_queue* maillon,int cadX, int cadY)`
+- `void ajouterQueueQ(t_queue* maillon)`
+- `void ajouterQueue(t_tete* serpent)`
+- `void effacerQueue(t_queue *maillon)`
+- `int supprimerQueue(t_queue * maillon)`
+- `void effacerSerpent(t_tete *tete)`
+- `void afficherQueue(t_queue *maillon,int cadX,int cadY)`
+- `void afficherSerpent(t_tete *tete)`
+- `void pasQueue(t_queue *maillon, int futCadx, int futCady)`
+- `void actCaseQueue(t_queue *maillon, int X, int Y)`
+- `void pasSerpent(t_tete *tete)`
+- `void caseSerpent(t_tete *tete)`
+- `int snake()`
 
 ---
 
-# Logigramme
-![bg right:42%](images/algorigramme_snake_image.png)
-
-
-
----
----
 
 ![bg right:40%](./images/frogger.png)
 

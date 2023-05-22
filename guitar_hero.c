@@ -13,11 +13,11 @@ int choix_difficulte(BITMAP *image){
         textprintf_centre_ex(image, font, 400, 300, makecol(255, 255, 255), -1, "2- MODE MOYEN");
         textprintf_centre_ex(image, font, 400, 400, makecol(255, 255, 255), -1, "3- MODE DIFFICILE");
         blit(image,screen,0,0,0,0,SCREEN_W,SCREEN_H);
-        if(key[KEY_1_PAD]){
+        if(key[KEY_1_PAD] || key[KEY_1] ){
             return 1;
-        } else if(key[KEY_2_PAD]){
+        } else if(key[KEY_2_PAD] || key[KEY_2]){
             return 2;
-        } else if(key[KEY_3_PAD]){
+        } else if(key[KEY_3_PAD] || key[KEY_3]){
             return 3;
         }
 
