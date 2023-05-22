@@ -82,8 +82,6 @@ Fonctionnalités :
 
 Les jeux ont tous été codés dans des fichiers source indépendants. L'arborescence est telle que :
 <div class="mermaid">
-%%{init: {'theme':'neutral'}}%%
-flowchart LR
     Projet --> Assets --> Jeu
     Projet --> file.c
     Projet --> file.h
@@ -304,8 +302,6 @@ Jules : Beaucoup de plaisir à travailler sur ce projet / Bonne cohésion d'équ
 Si vous deviez vous répartir des points, comment feriez-vous ?
 
 <div class="mermaid">
-%%{init: {'theme':'neutral'}}%%
-pie showData
     "Hugo" : 33
     "Clément" : 33
     "Jules" : 33
