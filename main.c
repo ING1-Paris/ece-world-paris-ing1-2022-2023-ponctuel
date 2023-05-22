@@ -161,9 +161,13 @@ int main() {
                     if (joueurs[0].score > joueurs[1].score) {
                         joueurs[0].nb_tickets++;
                         egalite = 0;
+                        joueurs[0].nb_tickets--;
+                        joueurs[1].nb_tickets--;
                     } else if (joueurs[0].score < joueurs[1].score) {
                         joueurs[1].nb_tickets++;
                         egalite = 0;
+                        joueurs[0].nb_tickets--;
+                        joueurs[1].nb_tickets--;
                     } else if (joueurs[0].score == joueurs[1].score) {
                         egalite = 1;
                         while (!key[KEY_R]) {
@@ -176,8 +180,6 @@ int main() {
                     //printf("Egalite : %d\n",egalite);
                     //printf("fin : %d\n",fin);
                     //printf("Choix : %d\n",choix);
-                    joueurs[0].nb_tickets--;
-                    joueurs[1].nb_tickets--;
                     tour=(tour+1)%2;
                     break;
                 case 1:
@@ -185,9 +187,13 @@ int main() {
                     if (score == 1){
                         joueurs[0].nb_tickets++;
                         egalite = 0;
+                        joueurs[0].nb_tickets--;
+                        joueurs[1].nb_tickets--;
                     } else if(score == 2) {
                         joueurs[1].nb_tickets++;
                         egalite = 0;
+                        joueurs[0].nb_tickets--;
+                        joueurs[1].nb_tickets--;
                     } else{
                         while(key[KEY_R]) {
                             egalite = 1;
@@ -201,8 +207,6 @@ int main() {
                     //printf("fin : %d\n",fin);
                     //printf("Choix : %d\n",choix);
                     tour=(tour+1)%2;
-                    joueurs[0].nb_tickets--;
-                    joueurs[1].nb_tickets--;
                     break;
                 case 2:
                     joueurs[0].score = guitar_hero();
@@ -210,9 +214,13 @@ int main() {
                     if (joueurs[0].score > joueurs[1].score) {
                         joueurs[0].nb_tickets++;
                         egalite = 0;
+                        joueurs[0].nb_tickets--;
+                        joueurs[1].nb_tickets--;
                     } else if (joueurs[0].score < joueurs[1].score) {
                         joueurs[1].nb_tickets++;
                         egalite = 0;
+                        joueurs[0].nb_tickets--;
+                        joueurs[1].nb_tickets--;
                     } else if (joueurs[0].score == joueurs[1].score) {
                         egalite = 1;
                         while (!key[KEY_R]) {
@@ -226,8 +234,6 @@ int main() {
                     //printf("fin : %d\n",fin);
                     //printf("Choix : %d\n",choix);
                     tour=(tour+1)%2;
-                    joueurs[0].nb_tickets--;
-                    joueurs[1].nb_tickets--;
                     break;
                 case 3:
                     egalite = 0;
